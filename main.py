@@ -1,8 +1,9 @@
 import pandas as pd
 from preprocess import token
-from LR import train_LR_classifier, evaluate, split_validation_set, tfidf_ngrams
+from LR import run_LR
+from xgboost_ import run_xgboost
 #TA ngu vl 
-
+print("Importing the dataset...")
 #import dataset
 train = pd.read_csv("data/train.csv",encoding = "ISO-8859-1")
 test = pd.read_csv("data/test.csv",encoding = "ISO-8859-1")
@@ -19,8 +20,13 @@ test = test.drop("Unnamed: 0", axis = 1)
 train.fillna(' ',inplace=True)
 test.fillna(' ',inplace=True)
 
-###Logistic regression with only text###
-X_train, X_valid, y_train, y_valid = split_validation_set(train.Processed, train.label, 0.4)
-X_train_vector, X_valid_vector = tfidf_ngrams(X_train, X_valid, 2)
-LRclassifier = train_LR_classifier(X_train_vector, y_train)
-evaluate(X_valid_vector, y_valid, LRclassifier)
+
+def run_model(X,y, model_name= "xgboost"):
+    if (model_name == "LR"):
+        run_LR(X,y)
+    elif (model_name == "xgboost"):
+        run_xgboost(X,y)
+    else: 
+        return 0 
+
+run_model(train.Processed, train.label)

@@ -24,3 +24,12 @@ def tfidf_ngrams(X, X_valid, n):
 	vectorX = vectWord.fit_transform(X)
 	vectorValidX = vectWord.transform(X_valid)
 	return vectorX, vectorValidX
+
+def run_LR(X,y, valid_size = 0.3, n_gram = 2):
+    X_train, X_valid, y_train, y_valid = split_validation_set(X, y, valid_size)
+    X_train_vector, X_valid_vector = tfidf_ngrams(X_train, X_valid, n_gram)
+    classifier = train_LR_classifier(X_train_vector, y_train)
+    print("Evaluate on the training set ")
+    evaluate(X_train_vector, y_train, classifier)
+    print("Evaluate on the valid set")
+    evaluate(X_valid_vector, y_valid, classifier)
